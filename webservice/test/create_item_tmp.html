@@ -1,0 +1,118 @@
+<!DOCTYPE>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>test create item</title>
+	
+	<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript">
+	// POST
+	
+	function searchItem(){
+		//alert($("input#brand").val());
+		$.post("../service/warehouse/create_item.php", { 
+			mode: "item_search"
+			, brand: $("input#brand").val()
+			, model: $("input#model").val()
+			, barcode: $("input#barcode").val()
+			, bought_from: $("input#bought_from").val()
+			, status: $("input#status").val()
+			, setup_at: $("input#setup_at").val() 
+		} , function(data) {
+				alert(data);
+				var obj = jQuery.parseJSON(data);
+				//alert(obj.status);
+				//alert(obj.result);
+				if(obj.result == 'authorized'){
+				// go to control panel
+				}
+			}
+		);
+	}
+	function regisItem(){
+		//alert($("input#brand").val());
+		$.post("../service/warehouse/create_item_tmp.php", { 
+			mode: "item_reg"
+			, brand: $("input#brand2").val()
+			, model: $("input#model2").val()
+			, barcode: $("input#barcode2").val()
+			, bought_from: $("input#bought_from2").val()
+			, status: $("#status_list").val()
+			, setup_at: $("input#setup_at2").val() 
+		} , function(data) {
+				//alert(data);
+				var obj = jQuery.parseJSON(data);
+				//alert(obj.status);
+				alert(obj.result);
+				if(obj.result == 'authorized'){
+				// go to control panel
+				}
+			}
+		);
+	}
+	$(document).ready(function() {
+	getItemStatus();
+});
+	function getDealerInfo(){
+		$.post("../service/warehouse/get_dealer_info.php", { data:''},
+		function(data) {
+			var obj = jQuery.parseJSON(data);
+			//alert( obj.result.value);
+			//var innertxt = '<option value="0" selected>(please select:)</option>';
+			$("#position_list").append($('<option></option>').val("0").html("please select:"));
+			$.each(obj.result, function(i, object) {
+			//	alert(object.detail+"");
+			//$("#position_list").val($("#position_list").val() + '<option value="'+ object.id +'">'+ object.detail +'</option>');
+			$("#position_list").append($('<option></option>').val(object.id).html(object.detail));
+		});
+	});
+	}
+function getItemStatus(){
+	$.post("../service/membership/get_item_status.php", { data:''},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		//alert( obj.result.value);
+		//var innertxt = '<option value="0" selected>(please select:)</option>';
+		$("#status_list").append($('<option></option>').val("0").html("please select:"));
+		$.each(obj.result, function(i, object) {
+			//	alert(object.detail+"");
+			//$("#position_list").val($("#position_list").val() + '<option value="'+ object.id +'">'+ object.detail +'</option>');
+			$("#status_list").append($('<option></option>').val(object.id).html(object.detail));
+		});
+	});
+}
+</script>
+	<style>
+		input {
+			display : block;
+		}
+		form {
+			float : left;
+		}
+	</style>
+	</head>
+	<body>
+	<form id='search' name='form1' action="" method="post">
+		<h3>==Search Field==</h3>
+		Brand : <input id='brand' type='text'/>
+		Model : <input id='model' type='text'/>
+		Barcode : <input id='barcode' type='text'/>
+		Bought From : <input id='bought_from' type='text'/>
+		Status : <input id='status' type='text'/>
+		Setup At : <input id='setup_at' type='text'/>
+		<input name='submit' type='button' value="search" onClick="searchItem()"/>
+	</form>
+	<form id='regis' name='form2' action="" method="post">
+		<h3>==Regis Field==</h3>
+		Brand : <input id='brand2' type='text'/>
+		Model : <input id='model2' type='text'/>
+		Barcode : <input id='barcode2' type='text'>
+		Pic : <input id='pic2' type='button' value='upload'/>
+		Bought From : <select id='bought_from2'></select>
+		Status : <select name='status_list' id='status_list'></select>
+		Setup At : <select id='setup_at2'></select>
+		Remark : <input id='remark2' type='text'/>
+		<input name='submit' type='button' value="submit" onClick="regisItem()"/>
+	</form>
+	</body>
+</html>

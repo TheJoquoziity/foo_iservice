@@ -1,0 +1,133 @@
+﻿<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+// POST
+
+function postData(){
+	//alert($("input#username").val());
+	$.post("../service/service/create_job.php", { mode: "web_add"
+		, detail: $("input#title").val()
+		, problem_inform: $("input#problem").val()},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		alert( obj.result );
+		//if(obj.result == 'authorized'){
+			// go to control panel
+		//}
+	});
+}
+
+function getJobList(){
+	//alert($("input#username").val());
+	$.post("../service/service/create_job.php", { mode: "web_get_jobs"
+		, detail: $("input#title2").val()},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		if(obj.status == "OK"){
+		//alert( obj.result );
+		$.each(obj.result, function(i, object) {
+				alert(object.detail+" "+ object.id);
+			//$("#position_list").val($("#position_list").val() + '<option value="'+ object.id +'">'+ object.detail +'</option>');
+			});}
+			else{
+			alert(obj.result);
+			}
+	});
+}
+
+function getEmployeeList(){
+	//alert($("input#username").val());
+	$.post("../service/service/create_job.php", { mode: "web_get_employees"
+		, name: $("input#name").val()
+		, lastname: $("input#lastname").val()},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		if(obj.status == "OK"){
+		$.each(obj.result, function(i, object) {
+				alert(object.name+" "+ object.lastname +" "+ object.id);
+			//$("#position_list").val($("#position_list").val() + '<option value="'+ object.id +'">'+ object.detail +'</option>');
+			});}
+			else{
+			alert(obj.result);
+			}
+	});
+}
+$(document).ready(function() {
+	getPosition();
+	getAccountType();
+});
+function getPosition(){
+	$.post("../service/membership/get_position.php", { data:''},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		//alert( obj.result.value);
+		//var innertxt = '<option value="0" selected>(please select:)</option>';
+		$("#position_list").append($('<option></option>').val("0").html("please select:"));
+		$.each(obj.result, function(i, object) {
+			//	alert(object.detail+"");
+			//$("#position_list").val($("#position_list").val() + '<option value="'+ object.id +'">'+ object.detail +'</option>');
+			$("#position_list").append($('<option></option>').val(object.id).html(object.detail));
+		});
+	});
+}
+function getAccountType(){
+	$.post("../service/membership/get_account_type.php", { data:''},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		//alert( obj.result.value);
+		//var innertxt = '<option value="0" selected>(please select:)</option>';
+		$("#account_list").append($('<option></option>').val("0").html("please select:"));
+		$.each(obj.result, function(i, object) {
+			//	alert(object.detail+"");
+			//$("#position_list").val($("#position_list").val() + '<option value="'+ object.id +'">'+ object.detail +'</option>');
+			$("#account_list").append($('<option></option>').val(object.id).html(object.detail));
+		});
+	});
+}
+</script>
+</head>
+
+<body>
+
+<form id="form1" name="form1" method="post" action="">
+<div id="divPostData">create new job</div>
+<!-- 
+job
+id	detail	how_to_fix	problem_inform	problem_actual	checkin_start	checkin_finish	pic	comment_group_id
+-->
+<input name="title" type="text" id="title" placeholder="title" size="40" />
+<input name="problem" type="text" id="problem" placeholder="problem inform" size="40" />
+<input type="button" name="Button" id="button" value="Create" onclick="postData()" />
+</form>
+
+<form id="form2" name="form2" method="post" action="">
+<div id="divPostData">get job list</div>
+<!-- 
+job
+id	detail	how_to_fix	problem_inform	problem_actual	checkin_start	checkin_finish	pic	comment_group_id
+-->
+<input name="title2" type="text" id="title2" placeholder="title" size="40" />
+<input type="button" name="button2" id="button2" value="get" onclick="getJobList()" />
+</form>
+
+<form id="form3" name="form3" method="post" action="">
+<div id="divPostData">get employee list</div>
+<input name="name" type="text" id="name" placeholder="name" size="40" />
+<input name="lastname" type="text" id="lastname" placeholder="lastname" size="40" />
+<input type="button" name="button3" id="button3" value="get" onclick="getEmployeeList()" />
+</form>
+
+<form id="form4" name="form4" method="post" action="">
+<div id="divPostData">assign job</div>
+<select name="job_list" id="job_list"></select>
+<select name="employee_list" id="employee_list"></select>
+<input type="button" name="button3" id="button3" value="get" onclick="getEmployeeList()" />
+</form>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+// POST
+
+function postData(){
+	//alert($("input#username").val());
+	$.post("../service/membership/create_user.php", { username: $("input#name").val() + "" + $("input#lastname").val()
+		, password: "12345678"
+		, name: $("input#name").val()
+		, lastname: $("input#lastname").val()
+		, position_id: $("#position_list").val()
+		, tel: $("input#tel").val()
+		, email: $("input#email").val()
+		, is_active: 0
+		, device_id: 1
+		, account_type: $("#account_list").val()},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		alert( obj.result );
+		if(obj.result == 'authorized'){
+			// go to control panel
+		}
+	});
+}
+$(document).ready(function() {
+	getPosition();
+	getAccountType();
+});
+function getPosition(){
+	$.post("../service/membership/get_position.php", { data:''},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		//alert( obj.result.value);
+		//var innertxt = '<option value="0" selected>(please select:)</option>';
+		$("#position_list").append($('<option></option>').val("0").html("please select:"));
+		$.each(obj.result, function(i, object) {
+			//	alert(object.detail+"");
+			//$("#position_list").val($("#position_list").val() + '<option value="'+ object.id +'">'+ object.detail +'</option>');
+			$("#position_list").append($('<option></option>').val(object.id).html(object.detail));
+		});
+	});
+}
+function getAccountType(){
+	$.post("../service/membership/get_account_type.php", { data:''},
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		//alert( obj.result.value);
+		//var innertxt = '<option value="0" selected>(please select:)</option>';
+		$("#account_list").append($('<option></option>').val("0").html("please select:"));
+		$.each(obj.result, function(i, object) {
+			//	alert(object.detail+"");
+			//$("#position_list").val($("#position_list").val() + '<option value="'+ object.id +'">'+ object.detail +'</option>');
+			$("#account_list").append($('<option></option>').val(object.id).html(object.detail));
+		});
+	});
+}
+</script>
+</head>
+
+<body>
+
+<form id="form2" name="form2" method="post" action="">
+<div id="divPostData"></div>
+<!-- 
+id	username	password	name	lastname	position_id	tel	email	is_active	device_id	account_type
+-->
+
+<!--<input name="username" type="text" id="username" placeholder="username" size="40" />
+<input name="password" type="text" id="password" placeholder="password" size="40" />-->
+<input name="name" type="text" id="name" placeholder="name" size="40" />
+<input name="lastname" type="text" id="lastname" placeholder="lastname" size="40" />
+<!--<input name="position_id" type="text" id="position_id" placeholder="position_id" value="4" size="40" />-->
+<select name="position_list" id="position_list"></select>
+<input name="tel" type="text" id="tel" placeholder="tel" size="40" />
+<input name="email" type="text" id="email" placeholder="email" size="40" />
+<!--<input name="device_id" type="text" id="device_id" placeholder="device_id" value="1" size="40" />-->
+<!--<input name="account_type" type="text" id="account_type" placeholder="account_type" value="1" size="40" />-->
+<select name="account_list" id="account_list"></select>
+<input type="button" name="Button" id="button" value="Create" onclick="postData()" />
+</form>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+// POST
+function postData(){
+	alert("");
+	$.post("../service/membership/login_process.php", { username: $("input#user").val(), password: $("input#pass").val() },
+	function(data) {
+		var obj = jQuery.parseJSON(data);
+		alert( obj.result );
+		if(obj.result == 'authorized'){
+			// go to control panel
+		}
+	});
+}
+</script>
+</head>
+
+<body>
+
+<form id="form2" name="form2" method="post" action="">
+<div id="divPostData"></div>
+<input name="user" type="text" id="user" size="40" />
+<input name="pass" type="text" id="pass" size="40" />
+<input type="button" name="Button" id="button" value="Login" onClick="postData()" />
+</form>
+
+</body>
+</html>
